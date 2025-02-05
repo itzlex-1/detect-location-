@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Info &amp; Location Detector</title>
+    <title>Location Detector</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,19 +34,12 @@
         button:hover {
             background: #0056b3;
         }
-        h3 {
-            font-size: 1.5em;
-            margin: 20px 0;
-        }
-        p {
-            font-size: 1.2em;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>📍 User Information &amp; Location</h2>
+        <h2>📍 User Information & Location</h2>
         <p>Fill out your details:</p>
         <input type="text" id="nameInput" placeholder="Enter your name" required>
         <input type="number" id="ageInput" placeholder="Enter your age" required>
@@ -75,21 +68,21 @@
                 navigator.geolocation.getCurrentPosition(async (position) => {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
+                    const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
 
                     // Reverse geocoding to get city name
-                    const apiKey = "YOUR_API_KEY"; // Replace with a real API key (like OpenCage or Google Maps)
-                    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
-
+                    const geoUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
                     try {
-                        const response = await fetch(url);
+                        const response = await fetch(geoUrl);
                         const data = await response.json();
                         const location = data.address.city || data.address.town || data.address.village || "Unknown Location";
 
                         document.getElementById("result").innerHTML = `
                             <h3>Hello, ${name} (${age}, ${gender})!</h3>
                             <p>🌍 Your detected location: ${location}</p>
-                            <p>📍 Latitude: ${lat.toFixed(4)}, Longitude: ${lon.toFixed(4)}</p>
+                            <p>📍 <a href="${mapsLink}" target="_blank">View on Google Maps</a></p>
                         `;
+
                     } catch (error) {
                         console.error("Error fetching location:", error);
                         document.getElementById("result").innerHTML = "<p style='color:red;'>Failed to detect location.</p>";
@@ -103,5 +96,5 @@
         }
     </script>
 
-
-</body></html>
+</body>
+</html>
